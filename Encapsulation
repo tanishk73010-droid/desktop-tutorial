@@ -1,0 +1,140 @@
+Challenge 1: The Secure Bank Account (Encapsulation Practice)
+Problem Statement
+Create a class named BankAccount that protects its internal data from unauthorized modifications and enforces strict rules when changing the balance.
+Requirements
+Data Hiding:
+Declare the fields accountNumber (String), accountHolder (String), and balance (double) as private.
+Controlled Access:
+Create a constructor to initialize all three fields when an account is created.
+Provide public getter methods for all three fields.
+Do not provide a direct setter for the balance field.
+Validation Logic:
+Create a public method deposit(double amount). It should only add to the balance if the amount is greater than zero. Otherwise, print an error message.
+Create a public method withdraw(double amount). It should check if the amount is greater than zero and if the account has sufficient balance. If valid, deduct the money; otherwise, print an error message
+
+
+
+
+import java.util.Scanner;
+
+class BankAccount {
+    private String accNumber;
+    private String accHolder;
+    private double balance;
+
+    public BankAccount(String accNumber, String accHolder, double initialBalance) {
+        this.accNumber = accNumber;
+        this.accHolder = accHolder;
+        if (initialBalance >= 0) {
+            this.balance = initialBalance;
+        } else {
+            this.balance = 0;
+            System.out.println("Warning: Initial balance cannot be negative. Set to 0.0");
+        }
+    }
+
+    public String getAccNumber() {
+        return this.accNumber;
+    }
+
+    public void setAccNumber(String accNumber) {
+        this.accNumber = accNumber;
+    }
+
+    public String getAccHolder() {
+        return this.accHolder;
+    }
+
+    public void setAccHolder(String accHolder) {
+        this.accHolder = accHolder;
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            System.out.println("Successfully deposited: ₹" + amount);
+            System.out.println("Current Balance: ₹" + this.balance);
+        } else {
+            System.out.println("Error: Cannot deposit a negative or zero amount.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            System.out.println("Error: Withdrawal amount must be greater than zero.");
+        } else if (amount > this.balance) {
+            System.out.println("Error: Insufficient balance! Transaction failed.");
+            System.out.println("Current Balance: ₹" + this.balance + " | Attempted: ₹" + amount);
+        } else {
+            this.balance -= amount;
+            System.out.println("Successfully withdrew: ₹" + amount);
+            System.out.println("Current Balance: ₹" + this.balance);
+        }
+    }
+    
+    public void displayAccountInfo() {
+        System.out.println("\n--- Account Details ---");
+        System.out.println("Account Holder : " + this.accHolder);
+        System.out.println("Account Number : " + this.accNumber);
+        System.out.println("Current Balance: ₹" + this.balance);
+        System.out.println("-----------------------\n");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Perfect Bank System!");
+        
+        System.out.print("Enter Account Holder Name: ");
+        String name = scanner.nextLine();
+        
+        System.out.print("Enter Account Number: ");
+        String accNum = scanner.nextLine();
+        
+        System.out.print("Enter Initial Deposit: ₹");
+        double initialDeposit = scanner.nextDouble();
+
+        BankAccount userAccount = new BankAccount(accNum, name, initialDeposit);
+        
+        boolean running = true;
+        while (running) {
+            userAccount.displayAccountInfo();
+            System.out.println("Choose an option:");
+            System.out.println("1. Deposit Money");
+            System.out.println("2. Withdraw Money");
+            System.out.println("3. Check Balance");
+            System.out.println("4. Exit");
+            System.out.print("Your choice: ");
+            
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter deposit amount: ₹");
+                    double depAmt = scanner.nextDouble();
+                    userAccount.deposit(depAmt);
+                    break;
+                case 2:
+                    System.out.print("Enter withdrawal amount: ₹");
+                    double witAmt = scanner.nextDouble();
+                    userAccount.withdraw(witAmt);
+                    break;
+                case 3:
+                    System.out.println("Your current balance is: ₹" + userAccount.getBalance());
+                    break;
+                case 4:
+                    System.out.println("Thank you for banking with us!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+        scanner.close();
+    }
+}
